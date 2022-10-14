@@ -22,7 +22,7 @@ class MainWindow(QMainWindow):
         self.uic.pushButton_2.clicked.connect(self.stop_thread)
         self.count = 0
         self.list = []
-        self.list_1 = ["data0", "data1", "data2", "data3", "data4"]
+        self.list_1 = ["data 0", "data 1", "data 2", "data 3", "data 4"]
 
     def stop_thread(self):
         for i in range(self.count):
