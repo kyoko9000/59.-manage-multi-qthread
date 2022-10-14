@@ -22,7 +22,7 @@ class MainWindow(QMainWindow):
         self.uic.pushButton_2.clicked.connect(self.stop_thread)
         self.count = 0
         self.list = []
-        self.list_1 = ["data1", "data2", "data3", "data4", "data5"]
+        self.list_1 = ["data0", "data1", "data2", "data3", "data4"]
 
     def stop_thread(self):
         for i in range(self.count):
@@ -34,7 +34,6 @@ class MainWindow(QMainWindow):
             self.thread[i] = multi_thread(index=i, data=self.list_1[i])
             self.thread[i].start()
             self.thread[i].signal.connect(self.receive_data)
-            # self.thread[i].off_thread.connect(self.on_finished)
 
     def receive_data(self, i, on_off, index):
         self.uic.tableWidget.setRowCount(self.count)
@@ -42,24 +41,18 @@ class MainWindow(QMainWindow):
         self.uic.tableWidget.setItem(index, 1, QTableWidgetItem(str(on_off)))
         self.uic.tableWidget.setItem(index, 2, QTableWidgetItem("thread: " + str(index)))
 
-    # def on_finished(self, index):
-    #     self.thread[index] = multi_thread(index=index)
-    #     self.thread[index].start()
-    #     self.thread[index].signal.connect(self.receive_data)
-    #     self.thread[index].off_thread.connect(self.on_finished)
-
 
 class multi_thread(QThread):
     signal = pyqtSignal(object, object, object)
-    # off_thread = pyqtSignal(object)
 
     def __init__(self, index, data):
         super(multi_thread, self).__init__()
         self.random = None
         self.index = index
+        self.data = data
         self.i = None
         self.on_off = "start"
-        print("start thread", self.index, data)
+        print("start thread", self.index, self.data)
 
     def run(self):
         self.on_off = "run"
@@ -69,7 +62,6 @@ class multi_thread(QThread):
             self.signal.emit(self.i, self.on_off, self.index)
         self.on_off = "stop"
         self.signal.emit(self.i, self.on_off, self.index)
-        # self.off_thread.emit(self.index)
 
     def stop(self):
         print("stop thread", self.index)
